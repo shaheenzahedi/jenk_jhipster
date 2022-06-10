@@ -1,5 +1,6 @@
 package org.aydm.danak.config.timezone
 
+import org.assertj.core.api.Assertions.assertThat
 import org.aydm.danak.IntegrationTest
 import org.aydm.danak.repository.timezone.DateTimeWrapper
 import org.aydm.danak.repository.timezone.DateTimeWrapperRepository
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.support.rowset.SqlRowSet
 import org.springframework.transaction.annotation.Transactional
-
+import java.lang.String.format
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -21,9 +22,6 @@ import java.time.OffsetTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-
-import java.lang.String.format
-import org.assertj.core.api.Assertions.assertThat
 
 /**
  * Integration tests for the ZoneId Hibernate configuration.
@@ -174,7 +172,8 @@ class HibernateTimeZoneIT {
         format("SELECT %s FROM jhi_date_time_wrapper where id=%d", fieldName, id)
 
     private fun assertThatDateStoredValueIsEqualToInsertDateValueOnGMTTimeZone(
-        sqlRowSet: SqlRowSet, expectedValue: String?
+        sqlRowSet: SqlRowSet,
+        expectedValue: String?
     ) {
         while (sqlRowSet.next()) {
             val dbValue = sqlRowSet.getString(1)

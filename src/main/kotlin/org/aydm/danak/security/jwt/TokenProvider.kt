@@ -1,9 +1,10 @@
 package org.aydm.danak.security.jwt
 
-import java.nio.charset.StandardCharsets
-import java.security.Key
-import java.util.*
-
+import io.jsonwebtoken.*
+import io.jsonwebtoken.io.Decoders
+import io.jsonwebtoken.security.Keys
+import io.jsonwebtoken.security.SignatureException
+import org.aydm.danak.management.SecurityMetersService
 import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -11,15 +12,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 import org.springframework.stereotype.Component
 import org.springframework.util.ObjectUtils
-
 import tech.jhipster.config.JHipsterProperties
-
-import io.jsonwebtoken.*
-import io.jsonwebtoken.io.Decoders
-import io.jsonwebtoken.security.SignatureException
-import io.jsonwebtoken.security.Keys
-
-import org.aydm.danak.management.SecurityMetersService
+import java.nio.charset.StandardCharsets
+import java.security.Key
+import java.util.*
 
 private const val AUTHORITIES_KEY = "auth"
 
@@ -111,7 +107,7 @@ class TokenProvider(
         } catch (e: SignatureException) {
             this.securityMetersService.trackTokenInvalidSignature()
 
-            log.trace(INVALID_JWT_TOKEN, e);
+            log.trace(INVALID_JWT_TOKEN, e)
         } catch (e: IllegalArgumentException) { // TODO: should we let it bubble (no catch), to avoid defensive programming and follow the fail-fast principle?
             log.error("Token validation error {}", e.message)
         }

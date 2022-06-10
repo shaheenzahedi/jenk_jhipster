@@ -1,9 +1,8 @@
 package org.aydm.danak.management
 
-import org.springframework.stereotype.Service
-
 import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.MeterRegistry
+import org.springframework.stereotype.Service
 
 private const val INVALID_TOKENS_METER_NAME = "security.authentication.invalid-tokens"
 private const val INVALID_TOKENS_METER_DESCRIPTION = "Indicates validation error count of the tokens presented by the clients."

@@ -1,10 +1,8 @@
 package org.aydm.danak.web.rest.errors
 
-import tech.jhipster.config.JHipsterConstants
-import tech.jhipster.web.util.HeaderUtil
-
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.env.Environment
 import org.springframework.dao.ConcurrencyFailureException
 import org.springframework.dao.DataAccessException
 import org.springframework.http.ResponseEntity
@@ -13,7 +11,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.NativeWebRequest
-import org.springframework.core.env.Environment
 import org.zalando.problem.DefaultProblem
 import org.zalando.problem.Problem
 import org.zalando.problem.ProblemBuilder
@@ -22,9 +19,10 @@ import org.zalando.problem.StatusType
 import org.zalando.problem.spring.web.advice.ProblemHandling
 import org.zalando.problem.spring.web.advice.security.SecurityAdviceTrait
 import org.zalando.problem.violations.ConstraintViolationProblem
-
-import javax.servlet.http.HttpServletRequest
+import tech.jhipster.config.JHipsterConstants
+import tech.jhipster.web.util.HeaderUtil
 import java.net.URI
+import javax.servlet.http.HttpServletRequest
 
 private const val FIELD_ERRORS_KEY = "fieldErrors"
 private const val MESSAGE_KEY = "message"
@@ -52,8 +50,8 @@ class ExceptionTranslator(private val env: Environment) : ProblemHandling, Secur
         if (!(problem is ConstraintViolationProblem || problem is DefaultProblem)) {
             return entity
         }
-            val nativeRequest = request?.getNativeRequest(HttpServletRequest::class.java)
-            val requestUri = if (nativeRequest != null) nativeRequest.requestURI else StringUtils.EMPTY
+        val nativeRequest = request?.getNativeRequest(HttpServletRequest::class.java)
+        val requestUri = if (nativeRequest != null) nativeRequest.requestURI else StringUtils.EMPTY
 
         val builder = Problem.builder()
             .withType(if (Problem.DEFAULT_TYPE == problem.type) DEFAULT_TYPE else problem.type)
@@ -79,13 +77,14 @@ class ExceptionTranslator(private val env: Environment) : ProblemHandling, Secur
     }
 
     override fun handleMethodArgumentNotValid(
-        ex: MethodArgumentNotValidException, request: NativeWebRequest
+        ex: MethodArgumentNotValidException,
+        request: NativeWebRequest
     ): ResponseEntity<Problem>? {
         val result = ex.bindingResult
-        val fieldErrors = result.fieldErrors.map { 
+        val fieldErrors = result.fieldErrors.map {
             FieldErrorVM(
-                it.objectName.replaceFirst(Regex("DTO$"), ""), 
-                it.field, 
+                it.objectName.replaceFirst(Regex("DTO$"), ""),
+                it.field,
                 if (StringUtils.isNotBlank(it.defaultMessage)) it.defaultMessage else it.code
             )
         }
@@ -103,13 +102,13 @@ class ExceptionTranslator(private val env: Environment) : ProblemHandling, Secur
     @ExceptionHandler
     fun handleEmailAlreadyUsedException(ex: org.aydm.danak.service.EmailAlreadyUsedException, request: NativeWebRequest): ResponseEntity<Problem>? {
         val problem = EmailAlreadyUsedException()
-        return create(problem, request, HeaderUtil.createFailureAlert(applicationName,  true, problem.entityName, problem.errorKey, problem.message))
+        return create(problem, request, HeaderUtil.createFailureAlert(applicationName, true, problem.entityName, problem.errorKey, problem.message))
     }
 
     @ExceptionHandler
     fun handleUsernameAlreadyUsedException(ex: org.aydm.danak.service.UsernameAlreadyUsedException, request: NativeWebRequest): ResponseEntity<Problem>? {
         val problem = LoginAlreadyUsedException()
-        return create(problem, request, HeaderUtil.createFailureAlert(applicationName,  true, problem.entityName, problem.errorKey, problem.message))
+        return create(problem, request, HeaderUtil.createFailureAlert(applicationName, true, problem.entityName, problem.errorKey, problem.message))
     }
 
     @ExceptionHandler

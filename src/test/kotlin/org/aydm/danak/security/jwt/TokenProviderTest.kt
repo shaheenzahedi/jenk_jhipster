@@ -1,30 +1,22 @@
 package org.aydm.danak.security.jwt
 
-import org.aydm.danak.security.ANONYMOUS
-import org.aydm.danak.management.SecurityMetersService
-
-import java.security.Key
-import java.util.Date
-
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.test.util.ReflectionTestUtils
-
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry
-
-import tech.jhipster.config.JHipsterProperties
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
-
-import java.nio.charset.StandardCharsets
-
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import org.assertj.core.api.Assertions.assertThat
+import org.aydm.danak.management.SecurityMetersService
+import org.aydm.danak.security.ANONYMOUS
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.test.util.ReflectionTestUtils
+import tech.jhipster.config.JHipsterProperties
+import java.security.Key
+import java.util.Date
 
 private const val ONE_MINUTE: Long = 60000
 
@@ -114,13 +106,12 @@ class TokenProviderTest {
         jHipsterProperties.security.authentication.jwt.base64Secret = base64Secret
 
         val SecurityMetersService = SecurityMetersService(SimpleMeterRegistry())
-        
+
         tokenProvider = TokenProvider(jHipsterProperties, SecurityMetersService)
 
         val key = ReflectionTestUtils.getField(tokenProvider, "key") as Key
         assertThat(key).isNotNull.isEqualTo(Keys.hmacShaKeyFor(Decoders.BASE64.decode(base64Secret)))
     }
-
 
     private fun createAuthentication(): Authentication {
         val authorities = mutableListOf(SimpleGrantedAuthority(ANONYMOUS))

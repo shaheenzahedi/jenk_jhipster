@@ -1,11 +1,9 @@
 package org.aydm.danak.web.rest
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.aydm.danak.security.jwt.JWTFilter
 import org.aydm.danak.security.jwt.TokenProvider
 import org.aydm.danak.web.rest.vm.LoginVM
-
-import com.fasterxml.jackson.annotation.JsonProperty
-
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-
 import javax.validation.Valid
 
 /**

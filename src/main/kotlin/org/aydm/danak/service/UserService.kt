@@ -1,18 +1,14 @@
 package org.aydm.danak.service
 
 import org.aydm.danak.config.DEFAULT_LANGUAGE
-import org.aydm.danak.config.SYSTEM_ACCOUNT
-import org.aydm.danak.domain.Authority
-import org.aydm.danak.service.dto.AdminUserDTO
 import org.aydm.danak.domain.User
 import org.aydm.danak.repository.AuthorityRepository
 import org.aydm.danak.repository.UserRepository
 import org.aydm.danak.repository.search.UserSearchRepository
 import org.aydm.danak.security.USER
 import org.aydm.danak.security.getCurrentUserLogin
+import org.aydm.danak.service.dto.AdminUserDTO
 import org.aydm.danak.service.dto.UserDTO
-import tech.jhipster.security.RandomUtil
-
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -20,7 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-
+import tech.jhipster.security.RandomUtil
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.Optional
@@ -34,7 +30,8 @@ class UserService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val userSearchRepository: UserSearchRepository,
-    private val authorityRepository: AuthorityRepository) {
+    private val authorityRepository: AuthorityRepository
+) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -66,11 +63,11 @@ class UserService(
     fun requestPasswordReset(mail: String): Optional<User> {
         return userRepository.findOneByEmailIgnoreCase(mail)
             .filter { it.activated == true }
-                .map {
-                    it.resetKey = RandomUtil.generateResetKey()
-                    it.resetDate = Instant.now()
-                    it
-                }
+            .map {
+                it.resetKey = RandomUtil.generateResetKey()
+                it.resetDate = Instant.now()
+                it
+            }
     }
 
     fun registerUser(userDTO: AdminUserDTO, password: String): User {
@@ -136,15 +133,14 @@ class UserService(
             activated = true,
             authorities = userDTO.authorities?.let { authorities ->
                 authorities.map { authorityRepository.findById(it) }
-                        .filter { it.isPresent }
-                        .mapTo(mutableSetOf()) { it.get() }
+                    .filter { it.isPresent }
+                    .mapTo(mutableSetOf()) { it.get() }
             } ?: mutableSetOf()
         )
         userRepository.save(user)
         userSearchRepository.save(user)
         log.debug("Created Information for User: $user")
         return user
-            
     }
 
     /**
@@ -159,7 +155,7 @@ class UserService(
             .map { it.get() }
             .map { user ->
                 user.apply {
-                    login = userDTO.login?.let{it.toLowerCase()}
+                    login = userDTO.login?.let { it.toLowerCase() }
                     firstName = userDTO.firstName
                     lastName = userDTO.lastName
                     email = userDTO.email?.toLowerCase()
@@ -199,32 +195,32 @@ class UserService(
      * @param langKey   language key.
      * @param imageUrl  image URL of user.
      */
-    fun updateUser(firstName: String?, lastName: String?, email: String?, langKey: String?, imageUrl: String?)  {
+    fun updateUser(firstName: String?, lastName: String?, email: String?, langKey: String?, imageUrl: String?) {
         getCurrentUserLogin()
             .flatMap(userRepository::findOneByLogin)
-            .ifPresent{
+            .ifPresent {
 
                 it.firstName = firstName
                 it.lastName = lastName
                 it.email = email?.toLowerCase()
                 it.langKey = langKey
                 it.imageUrl = imageUrl
-                    userSearchRepository.save(it)
-                    log.debug("Changed Information for User: $it")
-                }
+                userSearchRepository.save(it)
+                log.debug("Changed Information for User: $it")
+            }
     }
 
     @Transactional
     fun changePassword(currentClearTextPassword: String, newPassword: String) {
         getCurrentUserLogin()
             .flatMap(userRepository::findOneByLogin)
-                .ifPresent { user ->
-                    val currentEncryptedPassword = user.password
-                    if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
-                        throw InvalidPasswordException()
-                    }
-                    val encryptedPassword = passwordEncoder.encode(newPassword)
-                    user.password = encryptedPassword
+            .ifPresent { user ->
+                val currentEncryptedPassword = user.password
+                if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
+                    throw InvalidPasswordException()
+                }
+                val encryptedPassword = passwordEncoder.encode(newPassword)
+                user.password = encryptedPassword
                 log.debug("Changed password for User: $user")
                 user
             }
@@ -239,7 +235,6 @@ class UserService(
     fun getAllPublicUsers(pageable: Pageable): Page<UserDTO> {
         return userRepository.findAllByIdNotNullAndActivatedIsTrue(pageable).map { UserDTO(it) }
     }
-
 
     @Transactional(readOnly = true)
     fun getUserWithAuthoritiesByLogin(login: String): Optional<User> =
@@ -267,12 +262,10 @@ class UserService(
             }
     }
 
-
     /**
      * @return a list of all the authorities
      */
     @Transactional(readOnly = true)
     fun getAuthorities() =
         authorityRepository.findAll().asSequence().map { it.name }.filterNotNullTo(mutableListOf())
-
 }

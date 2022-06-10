@@ -4,13 +4,11 @@ import org.aydm.danak.domain.Authority
 import org.aydm.danak.domain.User
 import org.aydm.danak.service.dto.AdminUserDTO
 import org.aydm.danak.service.dto.UserDTO
-
-import org.springframework.stereotype.Service
-
 import org.mapstruct.BeanMapping
-import org.mapstruct.Mappings
 import org.mapstruct.Mapping
+import org.mapstruct.Mappings
 import org.mapstruct.Named
+import org.springframework.stereotype.Service
 
 /**
  * Mapper for the entity [User] and its DTO called [UserDTO].
@@ -78,7 +76,7 @@ class UserMapper {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     fun toDtoIdSet(users: Set<User>?): Set<UserDTO>? {
-        if ( users == null ) {
+        if (users == null) {
             return emptySet<UserDTO>()
         }
 
@@ -114,7 +112,7 @@ class UserMapper {
         Mapping(target = "login", source = "login")
     )
     fun toDtoLoginSet(users: Set<User>?): Set<UserDTO>? {
-        if ( users == null ) {
+        if (users == null) {
             return emptySet<UserDTO>()
         }
 

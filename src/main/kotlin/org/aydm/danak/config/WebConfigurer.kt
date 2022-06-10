@@ -1,10 +1,6 @@
 package org.aydm.danak.config
 
-import tech.jhipster.config.JHipsterConstants
-import tech.jhipster.config.JHipsterProperties
-import tech.jhipster.config.h2.H2ConfigurationHelper
 import org.slf4j.LoggerFactory
-import org.springframework.boot.web.server.MimeMappings
 import org.springframework.boot.web.server.WebServerFactory
 import org.springframework.boot.web.server.WebServerFactoryCustomizer
 import org.springframework.boot.web.servlet.ServletContextInitializer
@@ -16,27 +12,25 @@ import org.springframework.core.env.Profiles
 import org.springframework.util.CollectionUtils
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
-
-import javax.servlet.DispatcherType
-import javax.servlet.ServletContext
-import javax.servlet.ServletException
+import tech.jhipster.config.JHipsterConstants
+import tech.jhipster.config.JHipsterProperties
+import tech.jhipster.config.h2.H2ConfigurationHelper
 import java.io.File
+import java.net.URLDecoder.decode
 import java.nio.charset.StandardCharsets
 import java.nio.file.Paths
-import java.util.EnumSet
-
-import java.net.URLDecoder.decode
+import javax.servlet.ServletContext
+import javax.servlet.ServletException
 
 /**
  * Configuration of web application with Servlet 3.0 APIs.
  */
 @Configuration
 class WebConfigurer(
-    
+
     private val env: Environment,
     private val jHipsterProperties: JHipsterProperties
 ) : ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
-
 
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -83,7 +77,6 @@ class WebConfigurer(
         }
         return extractedPath.substring(0, extractionEndIndex)
     }
-
 
     @Bean
     fun corsFilter(): CorsFilter {

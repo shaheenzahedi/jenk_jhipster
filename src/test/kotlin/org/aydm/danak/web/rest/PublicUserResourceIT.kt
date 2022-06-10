@@ -1,11 +1,13 @@
 package org.aydm.danak.web.rest
 
 import org.aydm.danak.IntegrationTest
-import org.aydm.danak.security.ADMIN
-import org.aydm.danak.security.USER
 import org.aydm.danak.domain.User
 import org.aydm.danak.repository.UserRepository
 import org.aydm.danak.repository.search.UserSearchRepository
+import org.aydm.danak.security.ADMIN
+import org.aydm.danak.security.USER
+import org.hamcrest.Matchers.hasItem
+import org.hamcrest.Matchers.hasItems
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,14 +15,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.transaction.annotation.Transactional
-
-import javax.persistence.EntityManager
-
-import org.hamcrest.Matchers.hasItems
-import org.hamcrest.Matchers.hasItem
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.transaction.annotation.Transactional
+import javax.persistence.EntityManager
 
 /**
  * Integration tests for the {@link UserResource} REST controller.
@@ -31,7 +29,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 class PublicUserResourceIT {
 
     private val DEFAULT_LOGIN = "johndoe"
-
 
     @Autowired
     private lateinit var userRepository: UserRepository
@@ -65,23 +62,27 @@ class PublicUserResourceIT {
         userRepository.saveAndFlush(user)
 
         // Get all the users
-        restUserMockMvc.perform(get("/api/users?sort=id,desc")
-            .accept(MediaType.APPLICATION_JSON))
+        restUserMockMvc.perform(
+            get("/api/users?sort=id,desc")
+                .accept(MediaType.APPLICATION_JSON)
+        )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].login").value(hasItem<String>(DEFAULT_LOGIN)))
             .andExpect(jsonPath("$.[*].email").doesNotExist())
             .andExpect(jsonPath("$.[*].imageUrl").doesNotExist())
             .andExpect(jsonPath("$.[*].langKey").doesNotExist())
-            }
+    }
 
     @Test
     @Transactional
     @Throws(Exception::class)
     fun getAllAuthorities() {
-        restUserMockMvc.perform(get("/api/authorities")
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON))
+        restUserMockMvc.perform(
+            get("/api/authorities")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())

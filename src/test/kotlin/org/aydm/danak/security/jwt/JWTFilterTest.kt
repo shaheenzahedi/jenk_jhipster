@@ -1,12 +1,11 @@
 package org.aydm.danak.security.jwt
 
-import org.aydm.danak.management.SecurityMetersService
-import org.aydm.danak.security.USER
-import tech.jhipster.config.JHipsterProperties
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
-
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
+import org.assertj.core.api.Assertions.assertThat
+import org.aydm.danak.management.SecurityMetersService
+import org.aydm.danak.security.USER
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
@@ -17,8 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.util.ReflectionTestUtils
-
-import org.assertj.core.api.Assertions.assertThat
+import tech.jhipster.config.JHipsterProperties
 
 class JWTFilterTest {
 
@@ -118,5 +116,4 @@ class JWTFilterTest {
         assertThat(response.status).isEqualTo(HttpStatus.OK.value())
         assertThat(SecurityContextHolder.getContext().authentication).isNull()
     }
-
 }

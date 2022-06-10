@@ -1,0 +1,32 @@
+entity StaticPage {
+    id UUID
+    name String required
+    content TextBlob required
+    status StaticPageStatus
+    fileId UUID
+}
+
+enum StaticPageStatus {
+	DRAFT, PUBLIC, DELETED
+}
+
+entity HelpApp {
+    id UUID
+    staticPageId UUID
+}
+
+entity ContactUs {
+    id UUID
+    userId UUID
+    email String required pattern(/^[^@\s]+@[^@\s]+\.[^@\s]+$/)
+    message TextBlob
+    createTime ZonedDateTime
+}
+dto * with mapstruct
+service * with serviceClass
+filter *
+search * with elasticsearch
+
+relationship OneToMany {
+    HelpApp{staticPageId} to StaticPage
+}

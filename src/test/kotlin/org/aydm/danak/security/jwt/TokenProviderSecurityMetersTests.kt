@@ -1,31 +1,24 @@
 package org.aydm.danak.security.jwt
 
-import org.aydm.danak.security.ANONYMOUS
-import org.aydm.danak.management.SecurityMetersService
-
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
-
 import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry
-
+import org.assertj.core.api.Assertions.assertThat
+import org.aydm.danak.management.SecurityMetersService
+import org.aydm.danak.security.ANONYMOUS
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
-import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.test.util.ReflectionTestUtils
 import tech.jhipster.config.JHipsterProperties
-
 import java.security.Key
 import java.util.Date
-
-import org.assertj.core.api.Assertions.assertThat
 
 private const val ONE_MINUTE = 60000
 private const val INVALID_TOKENS_METER_EXPECTED_NAME = "security.authentication.invalid-tokens"
@@ -35,7 +28,6 @@ class TokenProviderSecurityMetersTests {
     private lateinit var meterRegistry: MeterRegistry
 
     private lateinit var tokenProvider: TokenProvider
-    
 
     @BeforeEach
     fun setup() {
@@ -69,62 +61,78 @@ class TokenProviderSecurityMetersTests {
 
     @Test
     fun testTokenExpiredCount() {
-        assertThat(meterRegistry.get(INVALID_TOKENS_METER_EXPECTED_NAME)
-            .tag("cause", "expired")
-            .counter().count()).isZero()
+        assertThat(
+            meterRegistry.get(INVALID_TOKENS_METER_EXPECTED_NAME)
+                .tag("cause", "expired")
+                .counter().count()
+        ).isZero()
 
         val expiredToken = createExpiredToken()
 
         tokenProvider.validateToken(expiredToken)
 
-        assertThat(meterRegistry.get(INVALID_TOKENS_METER_EXPECTED_NAME)
-            .tag("cause", "expired")
-            .counter().count()).isEqualTo(1.0)
+        assertThat(
+            meterRegistry.get(INVALID_TOKENS_METER_EXPECTED_NAME)
+                .tag("cause", "expired")
+                .counter().count()
+        ).isEqualTo(1.0)
     }
 
     @Test
     fun testTokenUnsupportedCount() {
-        assertThat(meterRegistry.get(INVALID_TOKENS_METER_EXPECTED_NAME)
-            .tag("cause", "unsupported")
-            .counter().count()).isZero()
+        assertThat(
+            meterRegistry.get(INVALID_TOKENS_METER_EXPECTED_NAME)
+                .tag("cause", "unsupported")
+                .counter().count()
+        ).isZero()
 
         val unsupportedToken = createUnsupportedToken()
 
         tokenProvider.validateToken(unsupportedToken)
 
-        assertThat(meterRegistry.get(INVALID_TOKENS_METER_EXPECTED_NAME)
-            .tag("cause", "unsupported")
-            .counter().count()).isEqualTo(1.0)
+        assertThat(
+            meterRegistry.get(INVALID_TOKENS_METER_EXPECTED_NAME)
+                .tag("cause", "unsupported")
+                .counter().count()
+        ).isEqualTo(1.0)
     }
 
     @Test
     fun testTokenSignatureInvalidCount() {
-        assertThat(meterRegistry.get(INVALID_TOKENS_METER_EXPECTED_NAME)
-            .tag("cause", "invalid-signature")
-            .counter().count()).isZero()
+        assertThat(
+            meterRegistry.get(INVALID_TOKENS_METER_EXPECTED_NAME)
+                .tag("cause", "invalid-signature")
+                .counter().count()
+        ).isZero()
 
         val tokenWithDifferentSignature = createTokenWithDifferentSignature()
 
         tokenProvider.validateToken(tokenWithDifferentSignature)
 
-        assertThat(meterRegistry.get(INVALID_TOKENS_METER_EXPECTED_NAME)
-            .tag("cause", "invalid-signature")
-            .counter().count()).isEqualTo(1.0)
+        assertThat(
+            meterRegistry.get(INVALID_TOKENS_METER_EXPECTED_NAME)
+                .tag("cause", "invalid-signature")
+                .counter().count()
+        ).isEqualTo(1.0)
     }
 
     @Test
     fun testTokenMalformedCount() {
-        assertThat(meterRegistry.get(INVALID_TOKENS_METER_EXPECTED_NAME)
-            .tag("cause", "malformed")
-            .counter().count()).isZero()
+        assertThat(
+            meterRegistry.get(INVALID_TOKENS_METER_EXPECTED_NAME)
+                .tag("cause", "malformed")
+                .counter().count()
+        ).isZero()
 
         val malformedToken = createMalformedToken()
 
         tokenProvider.validateToken(malformedToken)
 
-        assertThat(meterRegistry.get(INVALID_TOKENS_METER_EXPECTED_NAME)
-            .tag("cause", "malformed")
-            .counter().count()).isEqualTo(1.0)
+        assertThat(
+            meterRegistry.get(INVALID_TOKENS_METER_EXPECTED_NAME)
+                .tag("cause", "malformed")
+                .counter().count()
+        ).isEqualTo(1.0)
     }
 
     private fun createValidToken(): String {
@@ -174,5 +182,4 @@ class TokenProviderSecurityMetersTests {
     private fun aggregate(counters: Collection<Counter>): Double {
         return counters.sumOf(Counter::count)
     }
-
 }

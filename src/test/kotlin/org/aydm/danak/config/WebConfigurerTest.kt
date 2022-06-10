@@ -1,25 +1,10 @@
 package org.aydm.danak.config
 
-import tech.jhipster.config.JHipsterConstants
-import tech.jhipster.config.JHipsterProperties
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatCode
 import org.h2.server.web.WebServlet
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory
-import org.springframework.http.HttpHeaders
-import org.springframework.mock.env.MockEnvironment
-import org.springframework.mock.web.MockServletContext
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-
-import javax.servlet.Filter
-import javax.servlet.FilterRegistration
-import javax.servlet.Servlet
-import javax.servlet.ServletException
-import javax.servlet.ServletRegistration
-import java.io.File
-
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatCode
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyString
@@ -28,11 +13,24 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.spy
 import org.mockito.Mockito.verify
+import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory
+import org.springframework.http.HttpHeaders
+import org.springframework.mock.env.MockEnvironment
+import org.springframework.mock.web.MockServletContext
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder
+import tech.jhipster.config.JHipsterConstants
+import tech.jhipster.config.JHipsterProperties
+import java.io.File
+import javax.servlet.Filter
+import javax.servlet.FilterRegistration
+import javax.servlet.Servlet
+import javax.servlet.ServletException
+import javax.servlet.ServletRegistration
 
 /**
  * Unit tests for the [WebConfigurer] class.
@@ -66,7 +64,7 @@ class WebConfigurerTest {
     fun shouldStartUpProdServletContext() {
         env.setActiveProfiles(JHipsterConstants.SPRING_PROFILE_PRODUCTION)
 
-        assertThatCode { 
+        assertThatCode {
             webConfigurer.onStartup(servletContext)
         }.doesNotThrowAnyException()
         verify(servletContext, never())
@@ -78,7 +76,7 @@ class WebConfigurerTest {
     fun shouldStartUpDevServletContext() {
         env.setActiveProfiles(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT)
 
-        assertThatCode { 
+        assertThatCode {
             webConfigurer.onStartup(servletContext)
         }.doesNotThrowAnyException()
         verify(servletContext)

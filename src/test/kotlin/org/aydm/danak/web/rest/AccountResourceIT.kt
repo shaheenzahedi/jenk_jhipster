@@ -1,20 +1,19 @@
 package org.aydm.danak.web.rest
 
+import org.apache.commons.lang3.RandomStringUtils
+import org.assertj.core.api.Assertions.assertThat
 import org.aydm.danak.IntegrationTest
 import org.aydm.danak.config.DEFAULT_LANGUAGE
 import org.aydm.danak.domain.User
-
 import org.aydm.danak.repository.AuthorityRepository
 import org.aydm.danak.repository.UserRepository
 import org.aydm.danak.security.ADMIN
 import org.aydm.danak.security.USER
 import org.aydm.danak.service.UserService
-import org.aydm.danak.service.dto.PasswordChangeDTO
-import org.aydm.danak.service.dto.UserDTO
 import org.aydm.danak.service.dto.AdminUserDTO
+import org.aydm.danak.service.dto.PasswordChangeDTO
 import org.aydm.danak.web.rest.vm.KeyAndPasswordVM
 import org.aydm.danak.web.rest.vm.ManagedUserVM
-import org.apache.commons.lang3.RandomStringUtils
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -22,16 +21,10 @@ import org.springframework.http.MediaType
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.transaction.annotation.Transactional
-
-import java.time.Instant
-import java.util.Optional
-
-import org.assertj.core.api.Assertions.assertThat
-import org.aydm.danak.web.rest.TEST_USER_LOGIN
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-
+import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 import kotlin.test.assertContains
 
 /**
@@ -51,13 +44,11 @@ class AccountResourceIT {
     @Autowired
     private lateinit var userService: UserService
 
-
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
 
     @Autowired
     private lateinit var restAccountMockMvc: MockMvc
-
 
     @Test
     @WithUnauthenticatedMockUser
@@ -74,12 +65,14 @@ class AccountResourceIT {
     @Test
     @Throws(Exception::class)
     fun testAuthenticatedUser() {
-        restAccountMockMvc.perform(get("/api/authenticate")
-            .with { request ->
-                request.remoteUser = TEST_USER_LOGIN
-                request
-            }
-            .accept(MediaType.APPLICATION_JSON))
+        restAccountMockMvc.perform(
+            get("/api/authenticate")
+                .with { request ->
+                    request.remoteUser = TEST_USER_LOGIN
+                    request
+                }
+                .accept(MediaType.APPLICATION_JSON)
+        )
             .andExpect(status().isOk)
             .andExpect(content().string(TEST_USER_LOGIN))
     }
@@ -101,26 +94,28 @@ class AccountResourceIT {
         )
         userService.createUser(user)
 
-            restAccountMockMvc.perform(
-                get("/api/account")
-                    .accept(MediaType.APPLICATION_JSON)
-            )
-                .andExpect(status().isOk)
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("\$.login").value(TEST_USER_LOGIN))
-                .andExpect(jsonPath("\$.firstName").value("john"))
-                .andExpect(jsonPath("\$.lastName").value("doe"))
-                .andExpect(jsonPath("\$.email").value("john.doe@jhipster.com"))
-                .andExpect(jsonPath("\$.imageUrl").value("http://placehold.it/50x50"))
-                .andExpect(jsonPath("\$.langKey").value("en"))
-                .andExpect(jsonPath("\$.authorities").value(ADMIN))
+        restAccountMockMvc.perform(
+            get("/api/account")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("\$.login").value(TEST_USER_LOGIN))
+            .andExpect(jsonPath("\$.firstName").value("john"))
+            .andExpect(jsonPath("\$.lastName").value("doe"))
+            .andExpect(jsonPath("\$.email").value("john.doe@jhipster.com"))
+            .andExpect(jsonPath("\$.imageUrl").value("http://placehold.it/50x50"))
+            .andExpect(jsonPath("\$.langKey").value("en"))
+            .andExpect(jsonPath("\$.authorities").value(ADMIN))
     }
 
     @Test
     @Throws(Exception::class)
     fun testGetUnknownAccount() {
-        restAccountMockMvc.perform(get("/api/account")
-            .accept(MediaType.APPLICATION_PROBLEM_JSON))
+        restAccountMockMvc.perform(
+            get("/api/account")
+                .accept(MediaType.APPLICATION_PROBLEM_JSON)
+        )
             .andExpect(status().isInternalServerError)
     }
 
@@ -146,7 +141,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(validUser))
         )
             .andExpect(status().isCreated)
-        
 
         assertThat(userRepository.findOneByLogin("test-register-valid")).isPresent
     }
@@ -173,7 +167,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(invalidUser))
         )
             .andExpect(status().isBadRequest)
-        
 
         val user = userRepository.findOneByEmailIgnoreCase("funky@example.com")
         assertThat(user).isEmpty
@@ -201,7 +194,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(invalidUser))
         )
             .andExpect(status().isBadRequest)
-        
 
         val user = userRepository.findOneByLogin("bob")
         assertThat(user).isEmpty
@@ -229,7 +221,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(invalidUser))
         )
             .andExpect(status().isBadRequest)
-        
 
         val user = userRepository.findOneByLogin("bob")
         assertThat(user).isEmpty
@@ -257,7 +248,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(invalidUser))
         )
             .andExpect(status().isBadRequest)
-        
 
         val user = userRepository.findOneByLogin("bob")
         assertThat(user).isEmpty
@@ -302,7 +292,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(firstUser))
         )
             .andExpect(status().isCreated)
-        
 
         // Second (non activated) user
         restAccountMockMvc.perform(
@@ -311,7 +300,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(secondUser))
         )
             .andExpect(status().isCreated)
-        
 
         val testUser = userRepository.findOneByEmailIgnoreCase("alice2@example.com")
         assertThat(testUser).isPresent
@@ -325,7 +313,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(secondUser))
         )
             .andExpect(status().is4xxClientError)
-        
     }
 
     @Test
@@ -351,7 +338,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(firstUser))
         )
             .andExpect(status().isCreated)
-        
 
         val testUser1 = userRepository.findOneByLogin("test-register-duplicate-email")
         assertThat(testUser1).isPresent
@@ -375,7 +361,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(secondUser))
         )
             .andExpect(status().isCreated)
-        
 
         val testUser2 = userRepository.findOneByLogin("test-register-duplicate-email")
         assertThat(testUser2).isEmpty
@@ -403,7 +388,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(userWithUpperCaseEmail))
         )
             .andExpect(status().isCreated)
-        
 
         val testUser4 = userRepository.findOneByLogin("test-register-duplicate-email-3")
         assertThat(testUser4).isPresent
@@ -419,7 +403,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(secondUser))
         )
             .andExpect(status().is4xxClientError)
-        
     }
 
     @Test
@@ -438,14 +421,12 @@ class AccountResourceIT {
             authorities = mutableSetOf(ADMIN)
         }
 
-
         restAccountMockMvc.perform(
             post("/api/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(convertObjectToJsonBytes(validUser))
         )
             .andExpect(status().isCreated)
-        
 
         val userDup = userRepository.findOneWithAuthoritiesByLogin("badguy")
         assertThat(userDup).isPresent
@@ -514,7 +495,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(userDTO))
         )
             .andExpect(status().isOk)
-        
 
         val updatedUser = userRepository.findOneWithAuthoritiesByLogin(user?.login!!).orElse(null)
         assertThat(updatedUser?.firstName).isEqualTo(userDTO.firstName)
@@ -558,7 +538,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(userDTO))
         )
             .andExpect(status().isBadRequest)
-        
 
         assertThat(userRepository.findOneByEmailIgnoreCase("invalid email")).isNotPresent
     }
@@ -603,7 +582,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(userDTO))
         )
             .andExpect(status().isBadRequest)
-        
 
         val updatedUser = userRepository.findOneByLogin("save-existing-email").orElse(null)
         assertThat(updatedUser.email).isEqualTo("save-existing-email@example.com")
@@ -612,7 +590,7 @@ class AccountResourceIT {
     @Test
     @Transactional
     @WithMockUser("save-existing-email-and-login")
-@Throws(Exception::class)    fun testSaveExistingEmailAndLogin() {
+    @Throws(Exception::class) fun testSaveExistingEmailAndLogin() {
         val user = User(
             login = "save-existing-email-and-login",
             email = "save-existing-email-and-login@example.com",
@@ -639,7 +617,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(userDTO))
         )
             .andExpect(status().isOk)
-        
 
         val updatedUser = userRepository.findOneByLogin("save-existing-email-and-login").orElse(null)
         assertThat(updatedUser.email).isEqualTo("save-existing-email-and-login@example.com")
@@ -648,7 +625,7 @@ class AccountResourceIT {
     @Test
     @Transactional
     @WithMockUser("change-password-wrong-existing-password")
-@Throws(Exception::class)    fun testChangePasswordWrongExistingPassword() {
+    @Throws(Exception::class) fun testChangePasswordWrongExistingPassword() {
         val currentPassword = RandomStringUtils.random(60)
         val user = User(
             password = passwordEncoder.encode(currentPassword),
@@ -673,7 +650,7 @@ class AccountResourceIT {
     @Test
     @Transactional
     @WithMockUser("change-password")
-@Throws(Exception::class)    fun testChangePassword() {
+    @Throws(Exception::class) fun testChangePassword() {
         val currentPassword = RandomStringUtils.random(60)
         val user = User(
             password = passwordEncoder.encode(currentPassword),
@@ -697,7 +674,7 @@ class AccountResourceIT {
     @Test
     @Transactional
     @WithMockUser("change-password-too-small")
-@Throws(Exception::class)    fun testChangePasswordTooSmall() {
+    @Throws(Exception::class) fun testChangePasswordTooSmall() {
         val currentPassword = RandomStringUtils.random(60)
         val user = User(
             password = passwordEncoder.encode(currentPassword),
@@ -723,7 +700,7 @@ class AccountResourceIT {
     @Test
     @Transactional
     @WithMockUser("change-password-too-long")
-@Throws(Exception::class)    fun testChangePasswordTooLong() {
+    @Throws(Exception::class) fun testChangePasswordTooLong() {
         val currentPassword = RandomStringUtils.random(60)
         val user = User(
             password = passwordEncoder.encode(currentPassword),
@@ -749,7 +726,7 @@ class AccountResourceIT {
     @Test
     @Transactional
     @WithMockUser("change-password-empty")
-@Throws(Exception::class)    fun testChangePasswordEmpty() {
+    @Throws(Exception::class) fun testChangePasswordEmpty() {
         val currentPassword = RandomStringUtils.random(60)
         val user = User(
             password = passwordEncoder.encode(currentPassword),
@@ -842,7 +819,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(keyAndPassword))
         )
             .andExpect(status().isOk)
-        
 
         val updatedUser = userRepository.findOneByLogin(user.login!!).orElse(null)
         assertThat(passwordEncoder.matches(keyAndPassword.newPassword, updatedUser.password)).isTrue
@@ -870,7 +846,6 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(keyAndPassword))
         )
             .andExpect(status().isBadRequest)
-        
 
         val updatedUser = userRepository.findOneByLogin(user.login!!).orElse(null)
         assertThat(passwordEncoder.matches(keyAndPassword.newPassword, updatedUser.password)).isFalse
@@ -888,6 +863,5 @@ class AccountResourceIT {
                 .content(convertObjectToJsonBytes(keyAndPassword))
         )
             .andExpect(status().isInternalServerError)
-        
     }
 }

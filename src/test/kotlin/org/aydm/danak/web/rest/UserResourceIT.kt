@@ -1,5 +1,7 @@
 package org.aydm.danak.web.rest
 
+import org.apache.commons.lang3.RandomStringUtils
+import org.assertj.core.api.Assertions.assertThat
 import org.aydm.danak.IntegrationTest
 import org.aydm.danak.domain.Authority
 import org.aydm.danak.domain.User
@@ -8,10 +10,9 @@ import org.aydm.danak.repository.search.UserSearchRepository
 import org.aydm.danak.security.ADMIN
 import org.aydm.danak.security.USER
 import org.aydm.danak.service.dto.AdminUserDTO
-import org.aydm.danak.service.dto.UserDTO
 import org.aydm.danak.service.mapper.UserMapper
 import org.aydm.danak.web.rest.vm.ManagedUserVM
-import org.apache.commons.lang3.RandomStringUtils
+import org.hamcrest.Matchers.hasItem
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,16 +20,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.transaction.annotation.Transactional
-
-import javax.persistence.EntityManager
-import java.time.Instant
-import java.util.UUID
-import java.util.function.Consumer
-
-import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.Matchers.hasItems
-import org.hamcrest.Matchers.hasItem
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -36,7 +27,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-
+import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
+import javax.persistence.EntityManager
 import kotlin.test.assertNotNull
 
 /**
@@ -50,8 +43,6 @@ class UserResourceIT {
     @Autowired
     private lateinit var userRepository: UserRepository
 
-
-
     /**
      * This repository is mocked in the org.aydm.danak.repository.search test package.
      *
@@ -63,7 +54,6 @@ class UserResourceIT {
     @Autowired
     private lateinit var userMapper: UserMapper
 
-
     @Autowired
     private lateinit var em: EntityManager
 
@@ -71,7 +61,6 @@ class UserResourceIT {
     private lateinit var restUserMockMvc: MockMvc
 
     private lateinit var user: User
-
 
     @BeforeEach
     fun initTest() {
@@ -476,7 +465,6 @@ class UserResourceIT {
             .andExpect(status().isNoContent)
 
         assertPersistedUsers { userList -> assertThat(userList).hasSize(databaseSizeBeforeDelete - 1) }
-
     }
 
     @Test
@@ -621,8 +609,7 @@ class UserResourceIT {
             )
         }
 
-
-         /**
+        /**
          * Setups the database with one user.
          */
         @JvmStatic

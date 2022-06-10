@@ -4,19 +4,18 @@ import org.aydm.danak.IntegrationTest
 import org.aydm.danak.domain.User
 import org.aydm.danak.repository.UserRepository
 import org.aydm.danak.web.rest.vm.LoginVM
+import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.http.MediaType
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.transaction.annotation.Transactional
-
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
-import org.hamcrest.Matchers.*
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * Integration tests for the [UserJWTController] REST controller.

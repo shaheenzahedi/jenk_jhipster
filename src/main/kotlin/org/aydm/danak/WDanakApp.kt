@@ -1,20 +1,17 @@
 package org.aydm.danak
 
 import org.aydm.danak.config.ApplicationProperties
-import tech.jhipster.config.DefaultProfileUtil
-
-import tech.jhipster.config.JHipsterConstants
-
 import org.slf4j.LoggerFactory
-import org.springframework.boot.runApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.boot.runApplication
 import org.springframework.core.env.Environment
-
-import javax.annotation.PostConstruct
+import tech.jhipster.config.DefaultProfileUtil
+import tech.jhipster.config.JHipsterConstants
 import java.net.InetAddress
 import java.net.UnknownHostException
+import javax.annotation.PostConstruct
 
 @SpringBootApplication
 @EnableConfigurationProperties(LiquibaseProperties::class, ApplicationProperties::class)

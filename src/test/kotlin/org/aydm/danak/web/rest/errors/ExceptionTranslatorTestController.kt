@@ -6,13 +6,12 @@ import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-
 import javax.validation.Valid
 import javax.validation.constraints.NotNull
 
@@ -24,7 +23,7 @@ class ExceptionTranslatorTestController {
     fun concurrencyFailure(): Unit = throw ConcurrencyFailureException("test concurrency failure")
 
     @PostMapping("/method-argument")
-    fun methodArgument(@Valid @RequestBody testDTO: TestDTO ) = Unit
+    fun methodArgument(@Valid @RequestBody testDTO: TestDTO) = Unit
 
     @GetMapping("/missing-servlet-request-part")
     fun missingServletRequestPartException(@RequestPart part: String) = Unit

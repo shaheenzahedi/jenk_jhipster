@@ -6,10 +6,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
-import java.util.Arrays
 import java.util.Optional
-import java.util.stream.Stream
-
 
 /**
  * Get the login of the current user.
@@ -19,10 +16,9 @@ import java.util.stream.Stream
 fun getCurrentUserLogin(): Optional<String> =
     Optional.ofNullable(extractPrincipal(SecurityContextHolder.getContext().authentication))
 
-
 fun extractPrincipal(authentication: Authentication?): String? {
 
-    if(authentication == null) {
+    if (authentication == null) {
         return null
     }
 
@@ -32,7 +28,6 @@ fun extractPrincipal(authentication: Authentication?): String? {
         else -> null
     }
 }
-
 
 /**
  * Get the JWT of the current user.
@@ -54,14 +49,13 @@ fun isAuthenticated(): Boolean {
 
     if (authentication != null) {
         val isAnonymousUser = getAuthorities(authentication)?.none { it == ANONYMOUS }
-        if(isAnonymousUser != null) {
+        if (isAnonymousUser != null) {
             return isAnonymousUser
         }
     }
 
     return false
 }
-
 
 /**
 * Checks if the current user has any of the authorities.
@@ -70,8 +64,8 @@ fun isAuthenticated(): Boolean {
 * @return true if the current user has any of the authorities, false otherwise.
 */
 fun hasCurrentUserAnyOfAuthorities(vararg authorities: String): Boolean {
-val authentication = SecurityContextHolder.getContext().authentication
-return authentication != null && getAuthorities(authentication)?.any { authorities.contains(it) } ?: false
+    val authentication = SecurityContextHolder.getContext().authentication
+    return authentication != null && getAuthorities(authentication)?.any { authorities.contains(it) } ?: false
 }
 
 /**
@@ -91,11 +85,9 @@ fun hasCurrentUserNoneOfAuthorities(vararg authorities: String): Boolean {
 * @return true if the current user has the authority, false otherwise.
 */
 fun hasCurrentUserThisAuthority(authority: String): Boolean {
-   return hasCurrentUserAnyOfAuthorities(authority)
+    return hasCurrentUserAnyOfAuthorities(authority)
 }
-
 
 fun getAuthorities(authentication: Authentication): List<String>? {
     return authentication.authorities.map(GrantedAuthority::getAuthority)
 }
-

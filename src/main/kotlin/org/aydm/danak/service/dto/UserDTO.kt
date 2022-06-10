@@ -8,9 +8,9 @@ import org.aydm.danak.domain.User
 open class UserDTO(
     var id: Long? = null,
     var login: String? = null,
-){
+) {
 
-    constructor(user: User): this(user.id, user.login)
+    constructor(user: User) : this(user.id, user.login)
 
     override fun toString() = "UserDTO{" +
         "login='" + login + '\'' +

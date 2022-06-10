@@ -1,8 +1,8 @@
 package org.aydm.danak.repository.timezone
 
-import javax.persistence.*
 import java.io.Serializable
 import java.time.*
+import javax.persistence.*
 
 @Entity
 @Table(name = "jhi_date_time_wrapper")

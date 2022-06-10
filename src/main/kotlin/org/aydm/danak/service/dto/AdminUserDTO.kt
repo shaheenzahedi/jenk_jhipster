@@ -1,11 +1,9 @@
 package org.aydm.danak.service.dto
 
 import org.aydm.danak.config.LOGIN_REGEX
-import org.aydm.danak.domain.Authority
 import org.aydm.danak.domain.User
-
-import javax.validation.constraints.*
 import java.time.Instant
+import javax.validation.constraints.*
 
 /**
  * A DTO representing a user, with his authorities.

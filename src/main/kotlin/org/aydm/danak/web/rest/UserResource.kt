@@ -5,20 +5,15 @@ import org.aydm.danak.domain.User
 import org.aydm.danak.repository.UserRepository
 import org.aydm.danak.security.ADMIN
 import org.aydm.danak.service.MailService
-import org.springframework.data.domain.Sort
 import org.aydm.danak.service.UserService
 import org.aydm.danak.service.dto.AdminUserDTO
 import org.aydm.danak.web.rest.errors.BadRequestAlertException
 import org.aydm.danak.web.rest.errors.EmailAlreadyUsedException
 import org.aydm.danak.web.rest.errors.LoginAlreadyUsedException
-
-import tech.jhipster.web.util.HeaderUtil
-import tech.jhipster.web.util.PaginationUtil
-import tech.jhipster.web.util.ResponseUtil
-
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -29,18 +24,15 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import org.springframework.web.bind.annotation.RestController
-
-import javax.validation.constraints.Pattern
-import javax.validation.Valid
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder
+import tech.jhipster.web.util.HeaderUtil
+import tech.jhipster.web.util.PaginationUtil
+import tech.jhipster.web.util.ResponseUtil
 import java.net.URI
 import java.net.URISyntaxException
-import java.util.stream.Collectors
-import java.util.stream.StreamSupport
-
-import org.elasticsearch.index.query.QueryBuilders.queryStringQuery
+import javax.validation.Valid
+import javax.validation.constraints.Pattern
 
 /**
  * REST controller for managing users.
@@ -76,7 +68,6 @@ class UserResource(
     companion object {
         private val ALLOWED_ORDERED_PROPERTIES = arrayOf("id", "login", "firstName", "lastName", "email", "activated", "langKey", "createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate")
     }
-
 
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -155,16 +146,15 @@ class UserResource(
     @PreAuthorize("hasAuthority(\"$ADMIN\")")
     fun getAllUsers(@org.springdoc.api.annotations.ParameterObject pageable: Pageable): ResponseEntity<List<AdminUserDTO>> {
         log.debug("REST request to get all User for an admin")
-            if (!onlyContainsAllowedProperties(pageable)) {
-                return ResponseEntity.badRequest().build()
-            }
+        if (!onlyContainsAllowedProperties(pageable)) {
+            return ResponseEntity.badRequest().build()
+        }
         val page = userService.getAllManagedUsers(pageable)
         val headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page)
         return ResponseEntity(page.content, headers, HttpStatus.OK)
     }
     private fun onlyContainsAllowedProperties(pageable: Pageable) =
         pageable.sort.map(Sort.Order::getProperty).all { ALLOWED_ORDERED_PROPERTIES.contains(it) }
-
 
     /**
      * `GET /admin/users/:login` : get the "login" user.
@@ -178,7 +168,8 @@ class UserResource(
         log.debug("REST request to get User : $login")
         return ResponseUtil.wrapOrNotFound(
             userService.getUserWithAuthoritiesByLogin(login)
-                .map { AdminUserDTO(it) })
+                .map { AdminUserDTO(it) }
+        )
     }
 
     /**

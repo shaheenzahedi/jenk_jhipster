@@ -6,26 +6,20 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Description
 import org.hamcrest.TypeSafeDiagnosingMatcher
 import org.hamcrest.TypeSafeMatcher
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar
 import org.springframework.format.support.DefaultFormattingConversionService
 import org.springframework.format.support.FormattingConversionService
-
-import javax.persistence.EntityManager
-
-
 import java.io.IOException
 import java.math.BigDecimal
 import java.time.ZonedDateTime
 import java.time.format.DateTimeParseException
-
+import javax.persistence.EntityManager
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
-
-
-import org.assertj.core.api.Assertions.assertThat
 
 private val mapper = createObjectMapper()
 
@@ -88,7 +82,7 @@ fun sameInstant(date: ZonedDateTime) = ZonedDateTimeMatcher(date)
 /**
 * A matcher that tests that the examined number represents the same value - it can be Long, Double, etc - as the reference BigDecimal.
 */
-class NumberMatcher(private val value: BigDecimal):TypeSafeMatcher<Number>() {
+class NumberMatcher(private val value: BigDecimal) : TypeSafeMatcher<Number>() {
     override fun describeTo(description: Description) {
         description.appendText("a numeric value is ").appendValue(value)
     }
@@ -164,6 +158,5 @@ fun <T : Any> findAll(em: EntityManager, clazz: KClass<T>): List<T> {
     val all = cq.select(rootEntry)
     return em.createQuery(all).resultList
 }
-
 
 const val TEST_USER_LOGIN = "test"
