@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <!--
+        Added the constraints for entity StaticPage.
+    -->
+    <changeSet id="20220610073542-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="help_app_id"
+                                 baseTableName="static_page"
+                                 constraintName="fk_static_page__help_app_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="help_app"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,48 @@
+{
+  "applications": "*",
+  "changelogDate": "20220610073542",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "static_page",
+  "fields": [
+    {
+      "fieldName": "id",
+      "fieldType": "UUID"
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "content",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "StaticPageStatus",
+      "fieldValues": "DRAFT,PUBLIC,DELETED"
+    },
+    {
+      "fieldName": "fileId",
+      "fieldType": "UUID"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "StaticPage",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "helpApp",
+      "otherEntityRelationshipName": "staticPageId",
+      "relationshipName": "helpApp",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "elasticsearch",
+  "service": "serviceClass"
+}

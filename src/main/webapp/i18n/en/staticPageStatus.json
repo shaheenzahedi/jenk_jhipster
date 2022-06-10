@@ -1,0 +1,10 @@
+{
+  "wDanakApp": {
+    "StaticPageStatus": {
+      "null": "",
+      "DRAFT": "DRAFT",
+      "PUBLIC": "PUBLIC",
+      "DELETED": "DELETED"
+    }
+  }
+}

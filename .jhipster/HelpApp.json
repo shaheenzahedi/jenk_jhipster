@@ -1,0 +1,32 @@
+{
+  "applications": "*",
+  "changelogDate": "20220610073543",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "help_app",
+  "fields": [
+    {
+      "fieldName": "id",
+      "fieldType": "UUID"
+    },
+    {
+      "fieldName": "staticPageId",
+      "fieldType": "UUID"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "HelpApp",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "staticPage",
+      "otherEntityRelationshipName": "helpApp",
+      "relationshipName": "staticPageId",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "elasticsearch",
+  "service": "serviceClass"
+}
