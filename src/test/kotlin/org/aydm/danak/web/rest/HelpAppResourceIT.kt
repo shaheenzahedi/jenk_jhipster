@@ -226,32 +226,6 @@ class HelpAppResourceIT {
         defaultHelpAppShouldNotBeFound("staticPageId.specified=false")
     }
 
-    @Test
-    @Transactional
-    @Throws(Exception::class)
-    fun getAllHelpAppsByStaticPageIdIsEqualToSomething() {
-        // Initialize the database
-        helpAppRepository.saveAndFlush(helpApp)
-        var staticPageId: StaticPage
-        if (findAll(em, StaticPage::class).isEmpty()) {
-            staticPageId = StaticPageResourceIT.createEntity(em)
-            em.persist(staticPageId)
-            em.flush()
-        } else {
-            staticPageId = findAll(em, StaticPage::class)[0]
-        }
-        em.persist(staticPageId)
-        em.flush()
-        helpApp.addStaticPageId(staticPageId)
-        helpAppRepository.saveAndFlush(helpApp)
-        val staticPageIdId = staticPageId?.id
-
-        // Get all the helpAppList where staticPageId equals to staticPageIdId
-        defaultHelpAppShouldBeFound("staticPageIdId.equals=$staticPageIdId")
-
-        // Get all the helpAppList where staticPageId equals to UUID.randomUUID()
-        defaultHelpAppShouldNotBeFound("staticPageIdId.equals=${UUID.randomUUID()}")
-    }
 
     /**
      * Executes the search, and checks that the default entity is returned
